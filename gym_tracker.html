@@ -130,6 +130,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .mark-btn:hover{background:rgba(34,199,122,.1);border-color:rgba(34,199,122,.3);color:var(--green)}
 .yt-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;background:rgba(255,0,0,.1);border:1px solid rgba(255,0,0,.2);color:#ff4444;font-size:11px;font-weight:500;text-decoration:none;transition:all .15s;white-space:nowrap}
 .yt-btn:hover{background:rgba(255,0,0,.18);border-color:rgba(255,0,0,.35)}
+.variant-row{display:flex;gap:6px;flex-wrap:wrap;padding:0 0 14px}
+.variant-pill{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:11.5px;font-weight:500;cursor:pointer;transition:all .15s}
+.variant-pill:hover{border-color:var(--border2);color:var(--text)}
+.variant-pill.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.prog-toggle{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-right:4px}
+.prog-btn{padding:7px 12px;border:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;font-family:var(--font-body)}
+.prog-btn.active{background:var(--surface3);color:var(--text)}
+.prog-btn:first-child{border-right:1px solid var(--border)}
+.input-pair{display:flex;gap:10px;flex-wrap:wrap}
+.input-group{display:flex;align-items:center;gap:8px}
 
 /* CHART SECTION */
 .chart-section{padding:0 32px 40px}
@@ -260,47 +270,146 @@ const PHASES=[
 
 const DAYS=[
   {id:"push",label:"Push",fullLabel:"Día 1 — Push",color:"#E8501A",dot:"#E8501A",desc:"Pecho · Hombros · Tríceps",exercises:[
-    {id:"bench",name:"Bench press",detail:"barra",muscle:"Pecho",sets:4,baseReps:8,maxReps:12,prog:"peso",step:2.5,yt:"https://www.youtube.com/results?search_query=jeff+nippard+bench+press+tutorial"},
-    {id:"incline",name:"Incline dumbbell press",detail:"mancuernas",muscle:"Pecho superior",sets:3,baseReps:10,maxReps:14,prog:"peso",step:2,yt:"https://www.youtube.com/results?search_query=jeff+nippard+incline+dumbbell+press"},
-    {id:"cablefly",name:"Cable fly",detail:"polea media o baja",muscle:"Pecho — estiramiento",sets:3,baseReps:12,maxReps:18,prog:"reps",step:1,yt:"https://www.youtube.com/results?search_query=cable+chest+fly+proper+form+tutorial"},
-    {id:"ohpress",name:"Overhead press",detail:"mancuernas",muscle:"Deltoides anterior",sets:3,baseReps:10,maxReps:14,prog:"peso",step:2,yt:"https://www.youtube.com/results?search_query=dumbbell+overhead+press+form+tutorial"},
-    {id:"laterals",name:"Lateral raises",detail:"mancuernas",muscle:"Deltoides lateral",sets:3,baseReps:12,maxReps:18,prog:"reps",step:1,yt:"https://www.youtube.com/results?search_query=jeff+nippard+lateral+raises+tutorial"},
-    {id:"pushdown",name:"Tricep pushdown",detail:"cable, barra recta o cuerda",muscle:"Tríceps",sets:3,baseReps:12,maxReps:18,prog:"reps",step:1,yt:"https://www.youtube.com/results?search_query=cable+tricep+pushdown+proper+form+tutorial"},
-    {id:"ohext",name:"Overhead tricep extension",detail:"cable o mancuerna",muscle:"Tríceps largo",sets:2,baseReps:12,maxReps:18,prog:"reps",step:1,yt:"https://www.youtube.com/results?search_query=overhead+tricep+extension+cable+form+tutorial"},
+    {id:"bench",name:"Press de pecho",muscle:"Pecho",sets:4,baseReps:8,maxReps:12,step:2.5,
+      variants:[
+        {key:"barra",label:"Barra libre",detail:"banco plano",yt:"https://www.youtube.com/results?search_query=jeff+nippard+bench+press+tutorial"},
+        {key:"maquina",label:"Chest Press (máquina)",detail:"máquina sentado",yt:"https://www.youtube.com/results?search_query=chest+press+machine+proper+form"},
+        {key:"smith",label:"Smith Machine",detail:"banco plano",yt:"https://www.youtube.com/results?search_query=smith+machine+bench+press+form"},
+      ]},
+    {id:"incline",name:"Press inclinado",muscle:"Pecho superior",sets:3,baseReps:10,maxReps:14,step:2,
+      variants:[
+        {key:"barra",label:"Mancuernas",detail:"banco inclinado",yt:"https://www.youtube.com/results?search_query=jeff+nippard+incline+dumbbell+press"},
+        {key:"maquina",label:"Incline Press (máquina)",detail:"máquina sentado",yt:"https://www.youtube.com/results?search_query=incline+chest+press+machine+form"},
+      ]},
+    {id:"cablefly",name:"Cable fly",muscle:"Pecho — estiramiento",sets:3,baseReps:12,maxReps:18,step:1,
+      variants:[
+        {key:"cable",label:"Polea (cable)",detail:"media o baja",yt:"https://www.youtube.com/results?search_query=cable+chest+fly+proper+form+tutorial"},
+        {key:"maquina",label:"Pec Deck (máquina)",detail:"máquina",yt:"https://www.youtube.com/results?search_query=pec+deck+machine+proper+form"},
+      ]},
+    {id:"ohpress",name:"Press de hombro",muscle:"Deltoides anterior",sets:3,baseReps:10,maxReps:14,step:2,
+      variants:[
+        {key:"barra",label:"Mancuernas",detail:"sentado o de pie",yt:"https://www.youtube.com/results?search_query=dumbbell+overhead+press+form+tutorial"},
+        {key:"maquina",label:"Shoulder Press (máquina)",detail:"máquina sentado",yt:"https://www.youtube.com/results?search_query=shoulder+press+machine+proper+form"},
+      ]},
+    {id:"laterals",name:"Lateral raises",muscle:"Deltoides lateral",sets:3,baseReps:12,maxReps:18,step:1,
+      variants:[
+        {key:"barra",label:"Mancuernas",detail:"de pie",yt:"https://www.youtube.com/results?search_query=jeff+nippard+lateral+raises+tutorial"},
+        {key:"maquina",label:"Lateral Raise (máquina)",detail:"máquina",yt:"https://www.youtube.com/results?search_query=lateral+raise+machine+proper+form"},
+        {key:"cable",label:"Cable",detail:"polea baja",yt:"https://www.youtube.com/results?search_query=cable+lateral+raise+form"},
+      ]},
+    {id:"pushdown",name:"Tricep pushdown",muscle:"Tríceps",sets:3,baseReps:12,maxReps:18,step:1,
+      variants:[
+        {key:"cable",label:"Cable (cuerda o barra)",detail:"polea alta",yt:"https://www.youtube.com/results?search_query=cable+tricep+pushdown+proper+form+tutorial"},
+        {key:"maquina",label:"Tricep Machine",detail:"máquina",yt:"https://www.youtube.com/results?search_query=tricep+extension+machine+proper+form"},
+      ]},
+    {id:"ohext",name:"Overhead tricep extension",muscle:"Tríceps largo",sets:2,baseReps:12,maxReps:18,step:1,
+      variants:[
+        {key:"cable",label:"Cable",detail:"polea baja",yt:"https://www.youtube.com/results?search_query=overhead+tricep+extension+cable+form+tutorial"},
+        {key:"barra",label:"Mancuerna",detail:"sentado",yt:"https://www.youtube.com/results?search_query=dumbbell+overhead+tricep+extension+form"},
+      ]},
   ]},
   {id:"legs",label:"Legs",fullLabel:"Día 2 — Legs",color:"#4A9EFF",dot:"#4A9EFF",desc:"Cuádriceps · Isquios · Glúteos · Pantorrillas",exercises:[
-    {id:"squat",name:"Squat",detail:"barra libre",muscle:"Cuádriceps / Glúteos",sets:4,baseReps:8,maxReps:12,prog:"peso",step:5,yt:"https://www.youtube.com/results?search_query=jeff+nippard+squat+tutorial"},
-    {id:"legpress",name:"Leg press",detail:"máquina",muscle:"Cuádriceps",sets:3,baseReps:10,maxReps:14,prog:"peso",step:10,yt:"https://www.youtube.com/results?search_query=leg+press+proper+form+tutorial"},
-    {id:"rdl",name:"Romanian deadlift",detail:"mancuernas",muscle:"Isquiotibiales / Glúteos",sets:3,baseReps:10,maxReps:14,prog:"peso",step:2,yt:"https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell+form+tutorial"},
-    {id:"legcurl",name:"Leg curl",detail:"máquina tumbado",muscle:"Isquiotibiales",sets:3,baseReps:12,maxReps:18,prog:"reps",step:1,yt:"https://www.youtube.com/results?search_query=lying+leg+curl+machine+proper+form"},
-    {id:"legext",name:"Leg extension",detail:"máquina",muscle:"Cuádriceps",sets:3,baseReps:12,maxReps:18,prog:"reps",step:1,yt:"https://www.youtube.com/results?search_query=leg+extension+machine+proper+form+tutorial"},
-    {id:"calf",name:"Calf raises",detail:"de pie, con carga",muscle:"Pantorrillas",sets:4,baseReps:15,maxReps:24,prog:"reps",step:2,yt:"https://www.youtube.com/results?search_query=standing+calf+raise+proper+form+tutorial"},
+    {id:"squat",name:"Squat",muscle:"Cuádriceps / Glúteos",sets:4,baseReps:8,maxReps:12,step:5,
+      variants:[
+        {key:"barra",label:"Barra libre",detail:"back squat",yt:"https://www.youtube.com/results?search_query=jeff+nippard+squat+tutorial"},
+        {key:"smith",label:"Smith Machine",detail:"squat guiado",yt:"https://www.youtube.com/results?search_query=smith+machine+squat+form"},
+        {key:"hack",label:"Hack Squat (máquina)",detail:"máquina",yt:"https://www.youtube.com/results?search_query=hack+squat+machine+proper+form"},
+      ]},
+    {id:"legpress",name:"Leg press",muscle:"Cuádriceps",sets:3,baseReps:10,maxReps:14,step:10,
+      variants:[
+        {key:"maquina",label:"Leg Press (máquina)",detail:"45° o horizontal",yt:"https://www.youtube.com/results?search_query=leg+press+proper+form+tutorial"},
+      ]},
+    {id:"rdl",name:"Romanian deadlift",muscle:"Isquiotibiales / Glúteos",sets:3,baseReps:10,maxReps:14,step:2,
+      variants:[
+        {key:"barra",label:"Mancuernas",detail:"o barra",yt:"https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell+form+tutorial"},
+        {key:"maquina",label:"Smith Machine RDL",detail:"guiado",yt:"https://www.youtube.com/results?search_query=smith+machine+romanian+deadlift+form"},
+      ]},
+    {id:"legcurl",name:"Leg curl",muscle:"Isquiotibiales",sets:3,baseReps:12,maxReps:18,step:1,
+      variants:[
+        {key:"maquina",label:"Tumbado (máquina)",detail:"máquina",yt:"https://www.youtube.com/results?search_query=lying+leg+curl+machine+proper+form"},
+        {key:"maquina2",label:"Sentado (máquina)",detail:"máquina",yt:"https://www.youtube.com/results?search_query=seated+leg+curl+machine+form"},
+      ]},
+    {id:"legext",name:"Leg extension",muscle:"Cuádriceps",sets:3,baseReps:12,maxReps:18,step:1,
+      variants:[
+        {key:"maquina",label:"Leg Extension (máquina)",detail:"máquina",yt:"https://www.youtube.com/results?search_query=leg+extension+machine+proper+form+tutorial"},
+      ]},
+    {id:"calf",name:"Calf raises",muscle:"Pantorrillas",sets:4,baseReps:15,maxReps:24,step:2,
+      variants:[
+        {key:"barra",label:"De pie, con carga",detail:"mancuerna o barra",yt:"https://www.youtube.com/results?search_query=standing+calf+raise+proper+form+tutorial"},
+        {key:"maquina",label:"Calf Raise (máquina)",detail:"máquina de pie o sentado",yt:"https://www.youtube.com/results?search_query=calf+raise+machine+proper+form"},
+      ]},
   ]},
   {id:"pull",label:"Pull",fullLabel:"Día 3 — Pull",color:"#22C77A",dot:"#22C77A",desc:"Espalda · Bíceps · Rear Delts",exercises:[
-    {id:"latpull",name:"Lat pulldown",detail:"cable, agarre prono",muscle:"Dorsal ancho",sets:4,baseReps:8,maxReps:12,prog:"peso",step:2.5,yt:"https://www.youtube.com/results?search_query=jeff+nippard+lat+pulldown+tutorial"},
-    {id:"cablerow",name:"Seated cable row",detail:"polea baja",muscle:"Espalda media / Romboides",sets:3,baseReps:10,maxReps:14,prog:"peso",step:2.5,yt:"https://www.youtube.com/results?search_query=seated+cable+row+proper+form+tutorial"},
-    {id:"dbrow",name:"Single-arm dumbbell row",detail:"banco plano",muscle:"Dorsal / Romboides",sets:3,baseReps:10,maxReps:14,prog:"peso",step:2,yt:"https://www.youtube.com/results?search_query=single+arm+dumbbell+row+proper+form+tutorial"},
-    {id:"facepull",name:"Face pull",detail:"cable, cuerda",muscle:"Rear delt / Manguito rotador",sets:3,baseReps:15,maxReps:21,prog:"reps",step:1,yt:"https://www.youtube.com/results?search_query=face+pull+cable+rope+form+jeff+nippard"},
-    {id:"barcurl",name:"Barbell curl",detail:"barra recta o EZ",muscle:"Bíceps",sets:3,baseReps:10,maxReps:14,prog:"peso",step:1.25,yt:"https://www.youtube.com/results?search_query=barbell+curl+proper+form+tutorial"},
-    {id:"hammer",name:"Hammer curl",detail:"mancuernas",muscle:"Bíceps / Braquial",sets:2,baseReps:12,maxReps:18,prog:"reps",step:1,yt:"https://www.youtube.com/results?search_query=hammer+curl+proper+form+tutorial"},
-    {id:"inclinecurl",name:"Incline dumbbell curl",detail:"banco inclinado",muscle:"Bíceps — estiramiento",sets:2,baseReps:12,maxReps:18,prog:"reps",step:1,yt:"https://www.youtube.com/results?search_query=incline+dumbbell+curl+form+tutorial"},
+    {id:"latpull",name:"Lat pulldown",muscle:"Dorsal ancho",sets:4,baseReps:8,maxReps:12,step:2.5,
+      variants:[
+        {key:"cable",label:"Polea (cable)",detail:"agarre prono",yt:"https://www.youtube.com/results?search_query=jeff+nippard+lat+pulldown+tutorial"},
+        {key:"maquina",label:"Assisted Pull-up (máquina)",detail:"máquina asistida",yt:"https://www.youtube.com/results?search_query=assisted+pull+up+machine+form"},
+      ]},
+    {id:"cablerow",name:"Seated row",muscle:"Espalda media / Romboides",sets:3,baseReps:10,maxReps:14,step:2.5,
+      variants:[
+        {key:"cable",label:"Polea baja (cable)",detail:"agarre neutro",yt:"https://www.youtube.com/results?search_query=seated+cable+row+proper+form+tutorial"},
+        {key:"maquina",label:"Row Machine",detail:"máquina pecho apoyado",yt:"https://www.youtube.com/results?search_query=chest+supported+row+machine+form"},
+      ]},
+    {id:"dbrow",name:"Remo a un brazo",muscle:"Dorsal / Romboides",sets:3,baseReps:10,maxReps:14,step:2,
+      variants:[
+        {key:"barra",label:"Mancuerna",detail:"banco plano",yt:"https://www.youtube.com/results?search_query=single+arm+dumbbell+row+proper+form+tutorial"},
+        {key:"maquina",label:"T-Bar Row (máquina)",detail:"máquina",yt:"https://www.youtube.com/results?search_query=t+bar+row+machine+form"},
+      ]},
+    {id:"facepull",name:"Face pull",muscle:"Rear delt / Manguito rotador",sets:3,baseReps:15,maxReps:21,step:1,
+      variants:[
+        {key:"cable",label:"Cable, cuerda",detail:"polea alta",yt:"https://www.youtube.com/results?search_query=face+pull+cable+rope+form+jeff+nippard"},
+      ]},
+    {id:"barcurl",name:"Curl de bíceps",muscle:"Bíceps",sets:3,baseReps:10,maxReps:14,step:1.25,
+      variants:[
+        {key:"barra",label:"Barra recta o EZ",detail:"de pie",yt:"https://www.youtube.com/results?search_query=barbell+curl+proper+form+tutorial"},
+        {key:"maquina",label:"Bicep Curl (máquina)",detail:"máquina",yt:"https://www.youtube.com/results?search_query=bicep+curl+machine+proper+form"},
+        {key:"cable",label:"Cable",detail:"polea baja",yt:"https://www.youtube.com/results?search_query=cable+bicep+curl+form"},
+      ]},
+    {id:"hammer",name:"Hammer curl",muscle:"Bíceps / Braquial",sets:2,baseReps:12,maxReps:18,step:1,
+      variants:[
+        {key:"barra",label:"Mancuernas",detail:"de pie o alterno",yt:"https://www.youtube.com/results?search_query=hammer+curl+proper+form+tutorial"},
+        {key:"cable",label:"Cable (cuerda)",detail:"polea baja",yt:"https://www.youtube.com/results?search_query=cable+hammer+curl+rope+form"},
+      ]},
+    {id:"inclinecurl",name:"Incline dumbbell curl",muscle:"Bíceps — estiramiento",sets:2,baseReps:12,maxReps:18,step:1,
+      variants:[
+        {key:"barra",label:"Mancuernas",detail:"banco inclinado",yt:"https://www.youtube.com/results?search_query=incline+dumbbell+curl+form+tutorial"},
+      ]},
   ]},
 ];
 
 function getPhase(w){return PHASES.find(p=>p.weeks.includes(w));}
+function getProgMode(exId){return ST.progMode[exId]||"peso";}
 function getTarget(ex,w){
-  if(ex.prog==="peso"){
+  const mode=getProgMode(ex.id);
+  if(mode==="peso"){
     return{reps:ex.baseReps,note:`+${ex.step} kg vs semana anterior`};
   }else{
-    const added=(w-1)*ex.step;
+    const added=(w-1)*1;
     const reps=Math.min(ex.baseReps+added,ex.maxReps);
-    return{reps,note:w===1?`Establece peso base`:`+${ex.step} rep vs sem anterior`};
+    return{reps,note:w===1?`Establece reps base`:`+1 rep vs semana anterior`};
   }
 }
+function getVariant(exId){
+  const day=DAYS.flatMap(d=>d.exercises).find(e=>e.id===exId);
+  const savedKey=ST.variant[exId];
+  return day.variants.find(v=>v.key===savedKey)||day.variants[0];
+}
 
-let ST={day:"push",week:1,weights:{},done:{}};
-function save(){try{localStorage.setItem("gym8w_v2",JSON.stringify(ST))}catch(e){}}
-function load(){try{const s=localStorage.getItem("gym8w_v2");if(s)ST=JSON.parse(s)}catch(e){}}
+let ST={day:"push",week:1,weights:{},done:{},progMode:{},variant:{}};
+function save(){try{localStorage.setItem("gym8w_v4",JSON.stringify(ST))}catch(e){}}
+function load(){
+  try{
+    const s=localStorage.getItem("gym8w_v4");
+    if(s){
+      const parsed=JSON.parse(s);
+      ST=Object.assign({day:"push",week:1,weights:{},done:{},progMode:{},variant:{}},parsed);
+      ST.weights=ST.weights||{};
+      ST.done=ST.done||{};
+      ST.progMode=ST.progMode||{};
+      ST.variant=ST.variant||{};
+    }
+  }catch(e){}
+}
 load();
 
 let chartInst=null;
@@ -384,28 +493,52 @@ function renderExercises(){
   document.getElementById("ex-day-meta").textContent=`${day.desc} · Semana ${ST.week} de 8`;
   document.getElementById("ex-list").innerHTML=day.exercises.map(ex=>{
     const key=`${ST.day}_w${ST.week}_${ex.id}`;
-    const wKey=`${ST.day}_${ex.id}`;
-    const saved=ST.weights[wKey]||"";
+    const wKey=`${ST.day}_${ex.id}_kg_w${ST.week}`;
+    const rKey=`${ST.day}_${ex.id}_reps_w${ST.week}`;
+    const savedW=ST.weights[wKey]||"";
+    const savedR=ST.weights[rKey]||"";
     const isDone=ST.done[key]||false;
     const target=getTarget(ex,ST.week);
+    const mode=getProgMode(ex.id);
+    const variant=getVariant(ex.id);
+    const hasMultiple=ex.variants.length>1;
+
+    const variantPills=hasMultiple?`<div class="variant-row">
+      ${ex.variants.map(v=>`<button class="variant-pill ${v.key===variant.key?"active":""}" onclick="setVariant('${ex.id}','${v.key}')">${v.label}</button>`).join("")}
+    </div>`:"";
+
     return`<div class="ex-card ${isDone?"is-done":""}">
       <div class="ex-top">
         <div>
-          <div class="ex-name">${ex.name} <span style="color:var(--text3);font-weight:400;font-size:13px">— ${ex.detail}</span></div>
+          <div class="ex-name">${ex.name} <span style="color:var(--text3);font-weight:400;font-size:13px">— ${variant.detail}</span></div>
           <div class="ex-muscle">${ex.muscle}</div>
         </div>
         <div class="ex-targets">
           <div class="target-pill"><div class="tl">Series</div><div class="tv">${ex.sets}</div></div>
-          <div class="target-pill"><div class="tl">Reps</div><div class="tv">${target.reps}</div></div>
+          <div class="target-pill"><div class="tl">Reps obj.</div><div class="tv">${target.reps}</div></div>
           <div class="target-pill"><div class="tl">Descanso</div><div class="tv" style="font-size:13px">${ex.sets>=4?"90s":"60s"}</div></div>
-          <a href="${ex.yt}" target="_blank" class="yt-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 7a2.16 2.16 0 0 0-1.52-1.53C16.73 5 12 5 12 5s-4.73 0-6.07.44A2.16 2.16 0 0 0 4.41 7 22.55 22.55 0 0 0 4 12a22.55 22.55 0 0 0 .41 5 2.16 2.16 0 0 0 1.52 1.53C7.27 19 12 19 12 19s4.73 0 6.07-.44A2.16 2.16 0 0 0 19.59 17 22.55 22.55 0 0 0 20 12a22.55 22.55 0 0 0-.41-5zM10 15V9l5.2 3z"/></svg>Ver video</a>
+          <a href="${variant.yt}" target="_blank" class="yt-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 7a2.16 2.16 0 0 0-1.52-1.53C16.73 5 12 5 12 5s-4.73 0-6.07.44A2.16 2.16 0 0 0 4.41 7 22.55 22.55 0 0 0 4 12a22.55 22.55 0 0 0 .41 5 2.16 2.16 0 0 0 1.52 1.53C7.27 19 12 19 12 19s4.73 0 6.07-.44A2.16 2.16 0 0 0 19.59 17 22.55 22.55 0 0 0 20 12a22.55 22.55 0 0 0-.41-5zM10 15V9l5.2 3z"/></svg>Ver video</a>
           ${isDone?`<div class="done-badge"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#22C77A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Hecho</div>`:""}
         </div>
       </div>
+      ${variantPills}
       <div class="ex-bottom">
-        <span class="weight-label">Peso usado (kg)</span>
-        <input class="weight-input" type="number" step="0.25" min="0" placeholder="ej. 40 kg"
-          value="${saved}" onchange="saveWeight('${wKey}',this.value)" oninput="saveWeight('${wKey}',this.value)"/>
+        <div class="prog-toggle">
+          <button class="prog-btn ${mode==='peso'?'active':''}" onclick="setProgMode('${ex.id}','peso')">Progresar peso</button>
+          <button class="prog-btn ${mode==='reps'?'active':''}" onclick="setProgMode('${ex.id}','reps')">Progresar reps</button>
+        </div>
+        <div class="input-pair">
+          <div class="input-group">
+            <span class="weight-label">Peso (kg)</span>
+            <input class="weight-input" type="number" step="0.25" min="0" placeholder="ej. 40"
+              value="${savedW}" onchange="saveField('${wKey}',this.value)" oninput="saveField('${wKey}',this.value)"/>
+          </div>
+          <div class="input-group">
+            <span class="weight-label">Reps logradas</span>
+            <input class="weight-input" type="number" step="1" min="0" placeholder="ej. 12"
+              value="${savedR}" onchange="saveField('${rKey}',this.value)" oninput="saveField('${rKey}',this.value)"/>
+          </div>
+        </div>
         <span class="progress-note">${target.note}</span>
         ${!isDone?`<button class="mark-btn" onclick="markDone('${key}')">
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3.5 3.5 5.5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -429,27 +562,28 @@ function renderChart(){
   const ex=day.exercises.find(e=>e.id===exId);
   if(!ex)return;
 
+  const mode=getProgMode(ex.id);
+  const unit=mode==='peso'?'kg':'reps';
+  const suffix=mode==='peso'?'kg':'reps';
+
   const labels=[];const data=[];
   for(let w=1;w<=8;w++){
-    const wKey=`${ST.day}_${ex.id}`;
-    const val=ST.weights[wKey];
+    const dataKey=`${ST.day}_${ex.id}_${suffix}_w${w}`;
+    const val=ST.weights[dataKey];
     labels.push(`S${w}`);
     data.push(val?parseFloat(val):null);
   }
 
   const hasData=data.some(v=>v!==null);
-  const ctx=document.getElementById("progress-chart").getContext("2d");
+  const box=document.querySelector(".chart-box");
 
   if(chartInst){chartInst.destroy();chartInst=null;}
 
   if(!hasData){
-    ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-    const box=document.querySelector(".chart-box");
-    box.innerHTML=`<div class="empty-chart"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M4 28h24M8 20v8M13 14v14M18 18v10M23 10v18" stroke="#3A3A48" stroke-width="2" stroke-linecap="round"/></svg>Registra tu peso en los ejercicios para ver la progresión</div>`;
+    box.innerHTML=`<div class="empty-chart"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M4 28h24M8 20v8M13 14v14M18 18v10M23 10v18" stroke="#3A3A48" stroke-width="2" stroke-linecap="round"/></svg>Registra tu ${mode==='peso'?'peso':'reps'} en los ejercicios para ver la progresión</div>`;
     return;
   }
 
-  const box=document.querySelector(".chart-box");
   if(!box.querySelector("canvas")){
     box.innerHTML=`<canvas id="progress-chart"></canvas>`;
   }
@@ -460,7 +594,7 @@ function renderChart(){
     data:{
       labels,
       datasets:[{
-        label:"Peso (kg)",
+        label:unit==='kg'?"Peso (kg)":"Reps",
         data,
         borderColor:"#E8501A",
         backgroundColor:"rgba(232,80,26,.08)",
@@ -479,11 +613,11 @@ function renderChart(){
       plugins:{legend:{display:false},tooltip:{
         backgroundColor:"#16161A",borderColor:"#2E2E38",borderWidth:1,
         titleColor:"#F0EFE8",bodyColor:"#9A9A9F",
-        callbacks:{label:ctx=>`${ctx.parsed.y} kg`}
+        callbacks:{label:ctx=>`${ctx.parsed.y} ${unit}`}
       }},
       scales:{
         x:{grid:{color:"#2E2E38"},ticks:{color:"#5A5A62",font:{size:11}}},
-        y:{grid:{color:"#2E2E38"},ticks:{color:"#5A5A62",font:{size:11},callback:v=>`${v} kg`}}
+        y:{grid:{color:"#2E2E38"},ticks:{color:"#5A5A62",font:{size:11},callback:v=>`${v} ${unit}`}}
       }
     }
   });
@@ -491,8 +625,10 @@ function renderChart(){
 
 function setDay(id){ST.day=id;save();renderAll();}
 function setWeek(w){ST.week=w;save();renderAll();}
-function saveWeight(key,val){ST.weights[key]=val;save();renderChart();}
+function saveField(key,val){ST.weights[key]=val;save();renderChart();}
 function markDone(key){ST.done[key]=true;save();renderAll();}
+function setVariant(exId,key){ST.variant[exId]=key;save();renderExercises();}
+function setProgMode(exId,mode){ST.progMode[exId]=mode;save();renderExercises();renderChart();}
 
 function renderAll(){
   renderSidebar();
@@ -505,7 +641,11 @@ function renderAll(){
   renderChart();
 }
 
-renderAll();
+try{
+  renderAll();
+}catch(e){
+  document.body.innerHTML = '<div style="padding:40px;color:#fff;font-family:monospace;background:#0D0D0F;min-height:100vh"><h2 style="color:#E8501A">Error al cargar</h2><p style="margin-top:12px;white-space:pre-wrap">' + e.message + '\n\n' + (e.stack||'') + '</p></div>';
+}
 </script>
 </body>
 </html>
